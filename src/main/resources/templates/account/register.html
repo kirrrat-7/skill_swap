@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Create an account')}"></head>
+<body class="auth-body">
+<div th:replace="~{fragments/layout :: header('')}"></div>
+<main class="auth-layout">
+    <aside class="auth-side">
+        <div class="auth-side-content">
+            <p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> Good things are shared</p>
+            <h1>Bring what you know.<br><span>Find what you need.</span></h1>
+            <p>SkillSwap helps students learn from each other through real, one-to-one skill exchanges.</p>
+            <div class="auth-side-note"><span><svg class="icon"><use href="/icons/lucide.svg#repeat-2"></use></svg></span><div><strong>No money, just knowledge.</strong><small>Skill Credits are in-app rewards only.</small></div></div>
+        </div>
+        <span class="auth-side-foot">Learn Together. Grow Together.</span>
+    </aside>
+    <section class="auth-form-wrap" aria-labelledby="register-heading">
+        <div class="auth-form-head"><p class="eyebrow"><span class="eyebrow-line"></span> Your learning community</p><h2 id="register-heading">Create your account.</h2><p>Set up your student profile to get started.</p></div>
+        <form class="auth-form" th:action="@{/register}" th:object="${form}" method="post">
+            <div class="form-alert form-alert-error" role="alert" th:if="${#fields.hasGlobalErrors()}"><p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Please review the information and try again.</p></div>
+            <div class="form-row">
+                <label class="form-field"><span>Full name</span><input type="text" th:field="*{fullName}" autocomplete="name" maxlength="100" placeholder="Your name" required><small class="field-error" th:errors="*{fullName}"></small></label>
+                <label class="form-field"><span>Email address</span><input type="email" th:field="*{email}" autocomplete="email" maxlength="254" placeholder="you@university.edu" required><small class="field-error" th:errors="*{email}"></small></label>
+            </div>
+            <div class="form-row">
+                <label class="form-field"><span>Password</span><span class="password-control"><input id="register-password" type="password" name="password" autocomplete="new-password" minlength="12" maxlength="72" placeholder="At least 12 characters" required><button class="password-toggle" type="button" data-password-toggle hidden aria-label="Show password" aria-pressed="false" aria-controls="register-password"><svg class="icon"><use href="/icons/lucide.svg#eye"></use></svg></button></span><small>Include uppercase, lowercase, and a number.</small><small class="field-error" th:errors="*{password}"></small></label>
+                <label class="form-field"><span>Confirm password</span><span class="password-control"><input id="register-confirm-password" type="password" name="confirmPassword" autocomplete="new-password" minlength="12" maxlength="72" placeholder="Enter it again" required><button class="password-toggle" type="button" data-password-toggle hidden aria-label="Show password" aria-pressed="false" aria-controls="register-confirm-password"><svg class="icon"><use href="/icons/lucide.svg#eye"></use></svg></button></span><small class="field-error" th:errors="*{confirmPassword}"></small></label>
+            </div>
+            <div class="form-row">
+                <label class="form-field"><span>College or university <small class="optional-label">Optional</small></span><input type="text" th:field="*{college}" autocomplete="organization" maxlength="150" placeholder="Your institution"><small class="field-error" th:errors="*{college}"></small></label>
+                <label class="form-field"><span>Department <small class="optional-label">Optional</small></span><input type="text" th:field="*{department}" maxlength="100" placeholder="e.g. Computer Science"><small class="field-error" th:errors="*{department}"></small></label>
+            </div>
+            <label class="form-field form-field-short"><span>Current semester <small class="optional-label">Optional</small></span><select th:field="*{semester}"><option value="">Choose a semester</option><option th:each="n : ${#numbers.sequence(1,12)}" th:value="${n}" th:text="|Semester ${n}|">Semester 1</option></select><small class="field-error" th:errors="*{semester}"></small></label>
+            <label class="terms-check"><input type="checkbox" th:field="*{termsAccepted}" required><span>I agree to the <a href="/terms">Terms of Use</a> and have read the <a href="/privacy">Privacy Policy</a>.</span></label>
+            <small class="field-error terms-error" th:errors="*{termsAccepted}"></small>
+            <button class="button button-primary auth-submit" type="submit">Create account <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></button>
+            <p class="auth-switch">Already have an account? <a href="/login">Log in</a></p>
+        </form>
+    </section>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

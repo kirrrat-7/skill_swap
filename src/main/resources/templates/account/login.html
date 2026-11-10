@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Log in')}"></head>
+<body class="auth-body">
+<div th:replace="~{fragments/layout :: header('')}"></div>
+<main class="auth-layout auth-layout-login">
+    <aside class="auth-side">
+        <div class="auth-side-content">
+            <p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> Learn from each other</p>
+            <h1>Pick up where<br><span>you left off.</span></h1>
+            <p>Your next skill exchange starts with a conversation.</p>
+            <div class="auth-side-note"><span><svg class="icon"><use href="/icons/lucide.svg#messages-square"></use></svg></span><div><strong>Teach something. Learn something.</strong><small>Build your skills with your peers.</small></div></div>
+        </div>
+        <span class="auth-side-foot">Learn Together. Grow Together.</span>
+    </aside>
+    <section class="auth-form-wrap auth-login-form" aria-labelledby="login-heading">
+        <div class="auth-form-head"><p class="eyebrow"><span class="eyebrow-line"></span> Welcome back</p><h2 id="login-heading">Log in to SkillSwap.</h2><p>Use the email address you registered with.</p></div>
+        <form class="auth-form" th:action="@{/login}" method="post">
+            <div class="form-alert form-alert-error" role="alert" th:if="${param.error}"><p>We couldn't sign you in. Check your details, and make sure your email is verified.</p></div>
+            <div class="form-alert form-alert-success" role="status" th:if="${param.loggedOut}"><p>You have been logged out.</p></div>
+            <label class="form-field"><span>Email address</span><input type="email" name="email" autocomplete="username" maxlength="254" placeholder="you@university.edu" required autofocus></label>
+            <label class="form-field"><span>Password</span><span class="password-control"><input id="login-password" type="password" name="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-toggle hidden aria-label="Show password" aria-pressed="false" aria-controls="login-password"><svg class="icon"><use href="/icons/lucide.svg#eye"></use></svg></button></span></label>
+            <p class="forgot-link"><a href="/forgot-password">Forgot your password?</a></p>
+            <div class="form-alert form-alert-success" role="status" th:if="${param.reset}"><p>Your password was updated. Log in with your new password.</p></div>
+            <button class="button button-primary auth-submit" type="submit">Log in <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></button>
+            <p class="auth-switch">New to SkillSwap? <a href="/register">Create an account</a></p>
+            <p class="auth-security-note"><svg class="icon icon-small"><use href="/icons/lucide.svg#lock"></use></svg> Your session is protected with a secure, HttpOnly cookie.</p>
+        </form>
+    </section>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

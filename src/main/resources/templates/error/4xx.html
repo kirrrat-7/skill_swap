@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Request could not be completed')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header('')}"></div>
+<main class="message-page page-wrap"><section class="message-card"><span class="message-icon"><svg class="icon"><use href="/icons/lucide.svg#info"></use></svg></span><p class="eyebrow"><span class="eyebrow-line"></span> Request not available</p><h1>We couldn't complete that request.</h1><p>Check the address or the information you entered, then try again.</p><a class="button button-outline" href="/">Back to SkillSwap</a></section></main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

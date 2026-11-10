@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Verify your email')}"></head>
+<body class="auth-body">
+<div th:replace="~{fragments/layout :: header('')}"></div>
+<main class="message-page page-wrap">
+    <div class="message-card">
+        <span class="message-icon"><svg class="icon"><use href="/icons/lucide.svg#mail"></use></svg></span>
+        <p class="eyebrow"><span class="eyebrow-line"></span> One last step</p>
+        <h1>Check your inbox.</h1>
+        <p>We sent a verification link to <strong th:if="${registeredEmail != null}" th:text="${registeredEmail}">your email</strong>. Follow the link to verify your address and sign in.</p>
+        <p class="message-muted">The link expires after 24 hours. If it does not arrive, check your spam folder.</p>
+        <div class="dev-note" th:if="${devOutboxEnabled}"><svg class="icon"><use href="/icons/lucide.svg#info"></use></svg><span>This local development message was captured by the <a href="/dev/outbox">development email outbox</a>.</span></div>
+        <a class="button button-outline" href="/">Back to SkillSwap</a>
+    </div>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

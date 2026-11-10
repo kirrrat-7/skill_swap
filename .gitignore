@@ -1,0 +1,32 @@
+# Build output
+target/
+*.class
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Local configuration and secrets - never commit these
+.env
+.env.*
+!.env.example
+application-local.yml
+*.p8
+*.pem
+*.key
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local uploads / scratch
+/uploads/
+
+# Generated source archive (regenerate from HEAD when needed)
+/skillswap-source.zip
+/tmp/
