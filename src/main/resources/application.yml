@@ -1,0 +1,179 @@
+# SkillSwap configuration.
+# Every secret is read from an environment variable. Nothing sensitive belongs in this file.
+# See .env.example for the full list and README.md for what each variable does.
+
+spring:
+  application:
+    name: skillswap
+  datasource:
+    url: ${SKILLSWAP_DB_URL:jdbc:mysql://localhost:3306/skillswap}
+    username: ${SKILLSWAP_DB_USERNAME:skillswap}
+    password: ${SKILLSWAP_DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: ${SKILLSWAP_DB_POOL_SIZE:10}
+      minimum-idle: 2
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+      connection-init-sql: SET time_zone = '+00:00'
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        default_batch_fetch_size: 50
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 3MB
+  mail:
+    host: ${SKILLSWAP_SMTP_HOST:}
+    port: ${SKILLSWAP_SMTP_PORT:587}
+    username: ${SKILLSWAP_SMTP_USERNAME:}
+    password: ${SKILLSWAP_SMTP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 8000
+          timeout: 8000
+          writetimeout: 8000
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 1d
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: false
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  forward-headers-strategy: native
+  compression:
+    enabled: true
+  servlet:
+    session:
+      timeout: ${SKILLSWAP_SESSION_TIMEOUT:30m}
+      tracking-modes: cookie
+      cookie:
+        name: SKILLSWAP_SESSION
+        http-only: true
+        secure: ${SKILLSWAP_COOKIE_SECURE:true}
+        same-site: ${SKILLSWAP_COOKIE_SAME_SITE:lax}
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+    include-exception: false
+    whitelabel:
+      enabled: false
+  tomcat:
+    max-http-form-post-size: 3MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+  health:
+    mail:
+      enabled: false
+
+logging:
+  level:
+    root: INFO
+    com.skillswap: INFO
+
+skillswap:
+  # Public address of the site, e.g. https://skillswap.example.com. Used in e-mail links and OAuth callbacks.
+  base-url: ${SKILLSWAP_BASE_URL:}
+  support-email: ${SKILLSWAP_SUPPORT_EMAIL:}
+  default-timezone: ${SKILLSWAP_DEFAULT_TIMEZONE:UTC}
+
+  security:
+    # Base64 of 32 random bytes (openssl rand -base64 32). Encrypts TOTP secrets and the OAuth state cookie.
+    encryption-key: ${SKILLSWAP_ENCRYPTION_KEY:}
+    bcrypt-strength: ${SKILLSWAP_BCRYPT_STRENGTH:12}
+    require-https: ${SKILLSWAP_REQUIRE_HTTPS:false}
+    # Value for the CSP frame-ancestors directive. 'none' forbids embedding the site in a frame.
+    frame-ancestors: ${SKILLSWAP_FRAME_ANCESTORS:'none'}
+    login-max-failures: 5
+    login-lock-minutes: 15
+    remember-me-days: 14
+    verification-token-hours: 24
+    reset-token-minutes: 30
+    mfa-challenge-minutes: 5
+    mfa-max-attempts: 5
+
+  mail:
+    from: ${SKILLSWAP_MAIL_FROM:}
+    # Development only: keep outgoing mail in memory and show it at /dev/outbox instead of sending it.
+    dev-outbox: ${SKILLSWAP_DEV_OUTBOX:false}
+
+  # Optional first administrator, created at start-up if no account has this address.
+  admin:
+    email: ${SKILLSWAP_ADMIN_EMAIL:}
+    password: ${SKILLSWAP_ADMIN_PASSWORD:}
+
+  oauth:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:}
+      client-secret: ${GOOGLE_CLIENT_SECRET:}
+    apple:
+      # Services ID, Team ID, Key ID and the contents of the .p8 private key from the Apple developer portal.
+      client-id: ${APPLE_CLIENT_ID:}
+      team-id: ${APPLE_TEAM_ID:}
+      key-id: ${APPLE_KEY_ID:}
+      private-key: ${APPLE_PRIVATE_KEY:}
+    x:
+      client-id: ${X_CLIENT_ID:}
+      client-secret: ${X_CLIENT_SECRET:}
+
+  wallet:
+    signup-bonus: ${SKILLSWAP_WALLET_SIGNUP_BONUS:60}
+    teaching-reward: ${SKILLSWAP_WALLET_TEACHING_REWARD:50}
+    learning-cost: ${SKILLSWAP_WALLET_LEARNING_COST:30}
+    # Admin review thresholds
+    suspicious-daily-earnings: 300
+    suspicious-pair-sessions-per-week: 4
+
+  matching:
+    weights:
+      skill-compatibility: 40
+      reciprocal-compatibility: 25
+      availability-overlap: 15
+      proficiency-suitability: 10
+      learning-preferences: 10
+      rating: 0
+    # Number of matched skills that earns full marks for a skill component.
+    full-coverage-skills: 2
+    # Minutes of shared weekly availability that earns full marks.
+    full-availability-minutes: 120
+    max-results: 50
+
+  points:
+    teaching-session: 10
+    learning-session: 5
+
+  sessions:
+    min-duration-minutes: 15
+    max-duration-minutes: 240
+    reminder-hours-before: 24
+    # How long both participants have to confirm a finished session before it is flagged or closed.
+    confirmation-window-hours: 72

@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Development email outbox')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header('')}"></div>
+<main class="page-wrap dev-outbox-page">
+    <div class="dev-warning"><svg class="icon"><use href="/icons/lucide.svg#triangle-alert"></use></svg><span><strong>Local development only.</strong> Messages are held in memory and disappear when the app stops. Never enable this outbox in production.</span></div>
+    <div class="outbox-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> Mail preview</p><h1>Development outbox.</h1><p>Verification and account emails captured by the local dev profile.</p></div><form th:if="${!#lists.isEmpty(messages)}" method="post" action="/dev/outbox/clear"><button class="button button-outline" type="submit">Clear outbox</button></form></div>
+    <p class="outbox-empty" th:if="${#lists.isEmpty(messages)}">No emails captured yet. Create an account to generate a verification email.</p>
+    <article class="outbox-message" th:each="message : ${messages}"><div class="outbox-meta"><span class="outbox-subject" th:text="${message.subject}">Subject</span><span th:text="${message.recipient}">recipient@example.com</span></div><pre th:text="${message.text}">Email message body</pre><time th:text="${#temporals.format(message.sentAt, 'yyyy-MM-dd HH:mm:ss')} + ' UTC'">Sent</time></article>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

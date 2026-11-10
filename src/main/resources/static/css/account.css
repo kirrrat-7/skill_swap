@@ -1,0 +1,2 @@
+
+.password-control{position:relative;display:block}.password-control input{padding-right:41px}.password-toggle{position:absolute;right:4px;top:50%;width:32px;height:32px;display:grid;place-items:center;transform:translateY(-50%);border:0;border-radius:5px;background:transparent;color:#71819a;cursor:pointer}.password-toggle:hover{background:#f1f4f8;color:#315b91}.password-toggle .icon{width:16px;height:16px}.password-toggle:focus-visible{outline:2px solid rgba(55,105,190,.45);outline-offset:1px}

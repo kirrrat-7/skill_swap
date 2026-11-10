@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Explore skills')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header('skills')}"></div>
+<main class="catalog-page page-wrap">
+    <div class="page-breadcrumb"><a href="/">Home</a><svg class="icon"><use href="/icons/lucide.svg#chevron-right"></use></svg><span>Explore skills</span></div>
+    <div class="catalog-intro"><div><p class="eyebrow"><span class="eyebrow-line"></span> The SkillSwap catalog</p><h1>Find your next skill.</h1><p>Browse skills students can list for teaching or learning. Availability updates as the community grows.</p></div>
+        <div class="catalog-stat"><span class="catalog-stat-icon"><svg class="icon"><use href="/icons/lucide.svg#book-open"></use></svg></span><span><strong th:text="${#lists.size(skills)}">0</strong><small>skills shown</small></span></div>
+    </div>
+    <form class="catalog-filter" method="get" action="/skills">
+        <label class="search-field"><svg class="icon"><use href="/icons/lucide.svg#search"></use></svg><span class="visually-hidden">Search skills</span><input type="search" name="q" th:value="${query}" placeholder="Search skills…" maxlength="80"></label>
+        <label class="select-field"><span class="visually-hidden">Filter by category</span><select name="category"><option value="">All categories</option><option th:each="item : ${categories}" th:value="${item.slug}" th:text="${item.name}" th:selected="${item.slug == selectedCategory}">Programming</option></select><svg class="icon"><use href="/icons/lucide.svg#chevron-down"></use></svg></label>
+        <button type="submit" class="button button-primary">Search <svg class="icon icon-small"><use href="/icons/lucide.svg#search"></use></svg></button>
+        <a class="button button-quiet" th:if="${!#strings.isEmpty(query) or !#strings.isEmpty(selectedCategory)}" href="/skills">Clear</a>
+    </form>
+    <p class="catalog-result-count" th:text="${#lists.size(skills)} + ' results'">0 results</p>
+    <div class="catalog-results" th:if="${!#lists.isEmpty(skills)}">
+        <article class="catalog-skill" th:each="skill : ${skills}">
+            <div class="catalog-skill-icon"><svg class="icon"><use href="/icons/lucide.svg#book-open"></use></svg></div>
+            <div class="catalog-skill-info"><span class="category-label" th:text="${skill.categoryName}">Programming</span><h2 th:text="${skill.name}">Java</h2><p class="catalog-people"><svg class="icon icon-small"><use href="/icons/lucide.svg#users"></use></svg><span th:text="|${skill.teacherCount} teaching · ${skill.learnerCount} learning|">0 teaching · 0 learning</span></p></div>
+            <a class="button button-outline catalog-action" href="/register">Add to my skills <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a>
+        </article>
+    </div>
+    <div class="empty-panel catalog-empty" th:if="${#lists.isEmpty(skills)}"><span class="empty-icon"><svg class="icon"><use href="/icons/lucide.svg#search-x"></use></svg></span><div><h2>No skills found.</h2><p>Try another search or choose a different category.</p><a href="/skills" class="text-link">View all skills <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></div></div>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

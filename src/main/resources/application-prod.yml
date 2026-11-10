@@ -1,0 +1,16 @@
+# Production profile:  SPRING_PROFILES_ACTIVE=prod
+# Start-up fails if a required secret is missing (see ProductionSafetyCheck).
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
+skillswap:
+  security:
+    require-https: ${SKILLSWAP_REQUIRE_HTTPS:true}
+  mail:
+    dev-outbox: false
+logging:
+  level:
+    root: INFO
+    com.skillswap: INFO

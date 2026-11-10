@@ -1,0 +1,52 @@
+# Local packaging smoke-test only. Do not use its single MySQL user as a production grants model.
+# Put required values in an untracked .env file based on .env.example.
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: skillswap
+      MYSQL_USER: ${SKILLSWAP_DB_USERNAME:?Set SKILLSWAP_DB_USERNAME in .env}
+      MYSQL_PASSWORD: ${SKILLSWAP_DB_PASSWORD:?Set SKILLSWAP_DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set a separate MYSQL_ROOT_PASSWORD in .env}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci", "--default-time-zone=+00:00"]
+    volumes:
+      - skillswap-mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 8080
+      SPRING_PROFILES_ACTIVE: prod
+      SKILLSWAP_BASE_URL: ${SKILLSWAP_BASE_URL:?Set the public HTTPS origin}
+      SKILLSWAP_DB_URL: jdbc:mysql://mysql:3306/skillswap?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+      SKILLSWAP_DB_USERNAME: ${SKILLSWAP_DB_USERNAME:?Set SKILLSWAP_DB_USERNAME in .env}
+      SKILLSWAP_DB_PASSWORD: ${SKILLSWAP_DB_PASSWORD:?Set SKILLSWAP_DB_PASSWORD in .env}
+      SKILLSWAP_ENCRYPTION_KEY: ${SKILLSWAP_ENCRYPTION_KEY:?Set a generated encryption key in .env}
+      SKILLSWAP_SMTP_HOST: ${SKILLSWAP_SMTP_HOST:?Set an SMTP host in .env}
+      SKILLSWAP_SMTP_PORT: ${SKILLSWAP_SMTP_PORT:-587}
+      SKILLSWAP_SMTP_USERNAME: ${SKILLSWAP_SMTP_USERNAME:?Set SMTP credentials in .env}
+      SKILLSWAP_SMTP_PASSWORD: ${SKILLSWAP_SMTP_PASSWORD:?Set SMTP credentials in .env}
+      SKILLSWAP_MAIL_FROM: ${SKILLSWAP_MAIL_FROM:?Set the verified sender address in .env}
+      SKILLSWAP_COOKIE_SECURE: "true"
+      SKILLSWAP_REQUIRE_HTTPS: "true"
+    ports:
+      - "8080:8080"
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=32M,mode=1777
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  skillswap-mysql:

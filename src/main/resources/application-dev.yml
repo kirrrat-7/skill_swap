@@ -1,0 +1,22 @@
+# Local development profile:  --spring.profiles.active=dev
+spring:
+  thymeleaf:
+    cache: false
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 0
+server:
+  servlet:
+    session:
+      cookie:
+        secure: ${SKILLSWAP_COOKIE_SECURE:false}
+skillswap:
+  mail:
+    dev-outbox: ${SKILLSWAP_DEV_OUTBOX:true}
+  security:
+    bcrypt-strength: ${SKILLSWAP_BCRYPT_STRENGTH:10}
+logging:
+  level:
+    com.skillswap: DEBUG

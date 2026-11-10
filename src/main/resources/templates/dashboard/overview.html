@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body class="dashboard-body">
+<div class="dashboard-shell">
+    <aside class="dashboard-sidebar" aria-label="Student navigation">
+        <a class="brand dashboard-brand" href="/"><span class="brand-mark"><svg class="icon"><use href="/icons/lucide.svg#repeat-2"></use></svg></span><span>skill<span class="brand-strong">swap</span></span></a>
+        <span class="sidebar-label">WORKSPACE</span>
+        <nav class="dashboard-nav">
+            <a class="dashboard-nav-link is-active" href="/dashboard" aria-current="page"><svg class="icon"><use href="/icons/lucide.svg#layout-dashboard"></use></svg><span>Overview</span></a>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#user-round"></use></svg><span>My Profile</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#book-open"></use></svg><span>My Skills</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#compass"></use></svg><span>Find Matches</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#messages-square"></use></svg><span>Learning Requests</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#calendar-days"></use></svg><span>Learning Sessions</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#wallet-cards"></use></svg><span>SkillSwap Wallet</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#chart-no-axes-combined"></use></svg><span>Progress Tracker</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#trophy"></use></svg><span>Leaderboard</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#award"></use></svg><span>Achievements</span><small>Building</small></span>
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#bell"></use></svg><span>Notifications</span><small>Building</small></span>
+        </nav>
+        <span class="sidebar-label sidebar-label-bottom">ACCOUNT</span>
+        <nav class="dashboard-nav dashboard-nav-account" aria-label="Account settings">
+            <span class="dashboard-nav-link is-disabled" aria-disabled="true"><svg class="icon"><use href="/icons/lucide.svg#settings"></use></svg><span>Settings</span><small>Building</small></span>
+            <form class="sidebar-logout" method="post" action="/logout" th:action="@{/logout}"><button class="dashboard-nav-link" type="submit"><svg class="icon"><use href="/icons/lucide.svg#log-out"></use></svg><span>Log out</span></button></form>
+        </nav>
+        <div class="sidebar-credit-note"><svg class="icon"><use href="/icons/lucide.svg#info"></use></svg><span>Skill Credits are in-app rewards, not money.</span></div>
+    </aside>
+    <main class="dashboard-main">
+        <header class="dashboard-topbar">
+            <div class="dashboard-mobile-brand"><a class="brand" href="/"><span class="brand-mark"><svg class="icon"><use href="/icons/lucide.svg#repeat-2"></use></svg></span><span>skill<span class="brand-strong">swap</span></span></a></div>
+            <div class="dashboard-breadcrumb"><span>Workspace</span><svg class="icon"><use href="/icons/lucide.svg#chevron-right"></use></svg><strong>Overview</strong></div>
+            <div class="dashboard-top-actions"><span class="dashboard-notice" aria-label="Notifications are being built"><svg class="icon"><use href="/icons/lucide.svg#bell"></use></svg><span th:if="${dashboard.unreadNotifications > 0}" th:text="${dashboard.unreadNotifications}">0</span></span><span class="user-monogram" aria-hidden="true" th:text="${#strings.substring(user.fullName,0,1)}">S</span><span class="dashboard-user-name" th:text="${user.fullName}">Student</span></div>
+        </header>
+        <div class="dashboard-content">
+            <div class="dashboard-welcome"><div><p class="eyebrow"><span class="eyebrow-line"></span> Your learning space</p><h1>Good to see you, <span th:text="${user.fullName}">student</span>.</h1><p>Keep track of your skills and learning exchanges.</p></div><a href="/skills" class="button button-outline"><svg class="icon icon-small"><use href="/icons/lucide.svg#search"></use></svg> Explore skills</a></div>
+            <section class="dashboard-stats" aria-label="Your SkillSwap overview">
+                <article class="dashboard-stat"><div class="stat-heading"><span>Total skills</span><span class="stat-icon stat-blue"><svg class="icon"><use href="/icons/lucide.svg#book-open"></use></svg></span></div><strong th:text="${dashboard.totalSkills}">0</strong><small>on your profile</small></article>
+                <article class="dashboard-stat"><div class="stat-heading"><span>Teaching</span><span class="stat-icon stat-green"><svg class="icon"><use href="/icons/lucide.svg#presentation"></use></svg></span></div><strong th:text="${dashboard.teachingSkills}">0</strong><small>skills you can teach</small></article>
+                <article class="dashboard-stat"><div class="stat-heading"><span>Learning</span><span class="stat-icon stat-amber"><svg class="icon"><use href="/icons/lucide.svg#notebook-pen"></use></svg></span></div><strong th:text="${dashboard.learningSkills}">0</strong><small>skills you want to learn</small></article>
+                <article class="dashboard-stat"><div class="stat-heading"><span>Upcoming sessions</span><span class="stat-icon stat-violet"><svg class="icon"><use href="/icons/lucide.svg#calendar-days"></use></svg></span></div><strong th:text="${dashboard.upcomingSessions}">0</strong><small>scheduled with your peers</small></article>
+                <article class="dashboard-stat"><div class="stat-heading"><span>Completed sessions</span><span class="stat-icon stat-green"><svg class="icon"><use href="/icons/lucide.svg#check-check"></use></svg></span></div><strong th:text="${dashboard.completedSessions}">0</strong><small>confirmed exchanges</small></article>
+                <article class="dashboard-stat"><div class="stat-heading"><span>Skill Credits</span><span class="stat-icon stat-blue"><svg class="icon"><use href="/icons/lucide.svg#wallet-cards"></use></svg></span></div><strong th:text="${dashboard.skillCredits}">0</strong><small>in-app rewards only</small></article>
+                <article class="dashboard-stat"><div class="stat-heading"><span>Learning hours</span><span class="stat-icon stat-violet"><svg class="icon"><use href="/icons/lucide.svg#clock"></use></svg></span></div><strong th:text="${dashboard.learningHours}">0</strong><small>recorded from sessions</small></article>
+                <article class="dashboard-stat"><div class="stat-heading"><span>Achievements</span><span class="stat-icon stat-amber"><svg class="icon"><use href="/icons/lucide.svg#award"></use></svg></span></div><strong th:text="${dashboard.achievements}">0</strong><small>earned milestones</small></article>
+            </section>
+            <div class="dashboard-panels">
+                <section class="dashboard-panel next-session-panel">
+                    <div class="panel-header"><div><span class="panel-kicker">ON YOUR CALENDAR</span><h2>Next session</h2></div><span class="panel-icon"><svg class="icon"><use href="/icons/lucide.svg#calendar-days"></use></svg></span></div>
+                    <article class="next-session" th:if="${dashboard.nextSession != null}"><span class="session-date"><strong th:text="${#temporals.format(dashboard.nextSession.startsAt, 'd')}">12</strong><small th:text="${#temporals.format(dashboard.nextSession.startsAt, 'MMM')}">Jun</small></span><div class="session-details"><strong th:text="${dashboard.nextSession.topic}">Session topic</strong><span th:text="|${dashboard.nextSession.skillName} · ${dashboard.nextSession.mode}|">Skill · Online</span><small>With <span th:text="${dashboard.nextSession.otherStudent}">student</span></small></div><span class="session-time" th:text="${#temporals.format(dashboard.nextSession.startsAt, 'h:mm a')}">10:30 AM</span></article>
+                    <div class="dashboard-empty" th:if="${dashboard.nextSession == null}"><span class="dashboard-empty-icon"><svg class="icon"><use href="/icons/lucide.svg#calendar-days"></use></svg></span><div><strong>No sessions yet.</strong><p>When you schedule an exchange, it will show up here.</p><a href="/skills" class="text-link">Explore skills <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></div></div>
+                </section>
+                <section class="dashboard-panel activity-panel">
+                    <div class="panel-header"><div><span class="panel-kicker">RECENT UPDATES</span><h2>Notifications</h2></div><span class="unread-pill" th:if="${dashboard.unreadNotifications > 0}" th:text="${dashboard.unreadNotifications} + ' new'">0 new</span></div>
+                    <div class="notification-row" th:each="notice : ${dashboard.recentNotifications}"><span class="notification-dot" th:classappend="${notice.unread} ? ' is-unread' : ''"></span><div><strong th:text="${notice.title}">Notification title</strong><p th:text="${notice.message}">Notification details</p></div></div>
+                    <div class="dashboard-empty dashboard-empty-compact" th:if="${#lists.isEmpty(dashboard.recentNotifications)}"><span class="dashboard-empty-icon"><svg class="icon"><use href="/icons/lucide.svg#bell"></use></svg></span><div><strong>Nothing new.</strong><p>Updates will appear here when there is activity on your account.</p></div></div>
+                </section>
+                <section class="dashboard-panel progress-panel">
+                    <div class="panel-header"><div><span class="panel-kicker">KEEP GROWING</span><h2>Your learning</h2></div><span class="panel-icon"><svg class="icon"><use href="/icons/lucide.svg#chart-no-axes-combined"></use></svg></span></div>
+                    <div class="learning-empty"><span class="learning-empty-ring"><svg class="icon"><use href="/icons/lucide.svg#target"></use></svg></span><strong>Your progress starts with a skill.</strong><p>Choose something you want to learn and find a student who can share it.</p><a href="/skills" class="button button-outline">Browse the catalog <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></div>
+                </section>
+            </div>
+            <p class="dashboard-footnote">All totals are calculated from your SkillSwap account data. Skill Credits have no cash value.</p>
+        </div>
+    </main>
+</div>
+</body>
+</html>

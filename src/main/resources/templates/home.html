@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Learn together')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header('home')}"></div>
+<main>
+    <section class="home-intro page-wrap" aria-labelledby="home-title">
+        <div class="intro-copy">
+            <p class="eyebrow"><span class="eyebrow-line"></span> A better way to learn from each other</p>
+            <h1 id="home-title">Exchange skills.<br><span>Expand knowledge.</span><br>Grow together.</h1>
+            <p class="intro-lede">SkillSwap connects students who want to teach what they know and learn what they love.</p>
+            <div class="intro-actions">
+                <a class="button button-primary button-large" href="/register">Get started <svg class="icon"><use href="/icons/lucide.svg#arrow-right"></use></svg></a>
+                <a class="button button-outline button-large" href="/skills">Explore skills</a>
+            </div>
+            <div class="intro-proof">
+                <span class="proof-icon"><svg class="icon"><use href="/icons/lucide.svg#handshake"></use></svg></span>
+                <span>Teach one thing. Learn another. <strong>No money changes hands.</strong></span>
+            </div>
+        </div>
+        <div class="intro-art" role="img" aria-label="Two students sharing what they know">
+            <svg viewBox="0 0 540 412" class="exchange-art" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="22" y="24" width="496" height="360" rx="18" fill="#f2f5fa"/>
+                <path d="M63 315h407" stroke="#dce3ed" stroke-width="2"/>
+                <rect x="130" y="72" width="280" height="188" rx="12" fill="#fff" stroke="#dce3ed" stroke-width="2"/>
+                <path d="M130 101h280" stroke="#e5eaf1" stroke-width="2"/>
+                <circle cx="151" cy="86" r="3.5" fill="#c7d0df"/><circle cx="164" cy="86" r="3.5" fill="#c7d0df"/><circle cx="177" cy="86" r="3.5" fill="#c7d0df"/>
+                <rect x="155" y="124" width="101" height="108" rx="9" fill="#f4f7fb"/>
+                <circle cx="205" cy="158" r="19" fill="#dbe7f4"/>
+                <path d="M174 218c3-21 13-32 31-32 19 0 29 11 32 32" fill="#254c7e"/>
+                <path d="M193 158c0-9 5-15 13-15 9 0 14 6 14 15 0 7-6 14-14 14-7 0-13-7-13-14Z" fill="#edc9ae"/>
+                <rect x="275" y="126" width="110" height="8" rx="4" fill="#b9c7d8"/>
+                <rect x="275" y="144" width="92" height="6" rx="3" fill="#dce3ed"/>
+                <rect x="275" y="160" width="99" height="6" rx="3" fill="#dce3ed"/>
+                <rect x="275" y="176" width="72" height="6" rx="3" fill="#dce3ed"/>
+                <rect x="275" y="201" width="102" height="31" rx="7" fill="#e9f0f9"/>
+                <path d="M294 217h63" stroke="#3769be" stroke-width="2" stroke-linecap="round"/>
+                <path d="M290 264v30m110-30v30" stroke="#b3c1d2" stroke-width="6" stroke-linecap="round"/>
+                <path d="M260 281h83" stroke="#c1cbd9" stroke-width="8" stroke-linecap="round"/>
+                <rect x="47" y="142" width="105" height="49" rx="11" fill="#fff" stroke="#dce3ed" stroke-width="2"/>
+                <path d="m61 163 5 5 9-10" fill="none" stroke="#10a37f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="81" y="158" width="55" height="5" rx="2.5" fill="#b7c4d6"/><rect x="81" y="169" width="39" height="5" rx="2.5" fill="#d9e1ec"/>
+                <rect x="395" y="123" width="102" height="49" rx="11" fill="#fff" stroke="#dce3ed" stroke-width="2"/>
+                <circle cx="412" cy="147" r="8" fill="#eef2f8"/><path d="m408 147 3 3 5-6" fill="none" stroke="#3769be" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="427" y="142" width="52" height="5" rx="2.5" fill="#b7c4d6"/><rect x="427" y="153" width="34" height="5" rx="2.5" fill="#d9e1ec"/>
+                <circle cx="270" cy="320" r="38" fill="#fff" stroke="#dce3ed" stroke-width="2"/>
+                <path d="M245 320h50m-9-9 9 9-9 9m-12-18-9 9 9 9" fill="none" stroke="#3769be" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="85" cy="259" r="5" fill="#3769be"/><circle cx="452" cy="218" r="5" fill="#a9bfdc"/>
+                <path d="M78 275c20 6 35 6 48-1" fill="none" stroke="#c3d1e2" stroke-width="2" stroke-dasharray="4 5"/>
+                <path d="M402 199c13-10 27-14 42-12" fill="none" stroke="#c3d1e2" stroke-width="2" stroke-dasharray="4 5"/>
+            </svg>
+            <div class="art-caption"><span class="art-caption-mark"><svg class="icon"><use href="/icons/lucide.svg#repeat-2"></use></svg></span><span><strong>Skills go both ways.</strong><br>Everyone has something to share.</span></div>
+        </div>
+    </section>
+
+    <section class="trust-strip" aria-label="SkillSwap community at a glance">
+        <div class="trust-inner page-wrap">
+            <div><span class="trust-number" th:text="${metrics.studentCount}">0</span><span> verified students</span></div>
+            <span class="trust-separator" aria-hidden="true"></span>
+            <div><span class="trust-number" th:text="${metrics.skillCount}">0</span><span> public skill listings</span></div>
+            <span class="trust-separator" aria-hidden="true"></span>
+            <div><span class="trust-number" th:text="${metrics.verifiedExchanges}">0</span><span> completed exchanges</span></div>
+            <span class="trust-note">Counts update from the SkillSwap database.</span>
+        </div>
+    </section>
+
+    <section class="section page-wrap" id="how-it-works">
+        <div class="section-heading section-heading-split">
+            <div><p class="eyebrow"><span class="eyebrow-line"></span> Straightforward by design</p><h2>Learning works both ways.</h2></div>
+            <p>Find a student whose strengths match what you want to learn. Then trade time, not money.</p>
+        </div>
+        <div class="steps-grid">
+            <article class="step-card"><span class="step-number">01</span><span class="step-icon"><svg class="icon"><use href="/icons/lucide.svg#user-round-plus"></use></svg></span><h3>Share your skills</h3><p>Add what you can teach and what you want to learn. Your profile makes the right overlaps easier to find.</p><a href="/register" class="text-link">Create a profile <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></article>
+            <article class="step-card"><span class="step-number">02</span><span class="step-icon"><svg class="icon"><use href="/icons/lucide.svg#compass"></use></svg></span><h3>Find a good match</h3><p>SkillSwap compares teaching, learning, availability, and preferred ways to meet.</p><a href="/skills" class="text-link">Browse skills <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></article>
+            <article class="step-card"><span class="step-number">03</span><span class="step-icon"><svg class="icon"><use href="/icons/lucide.svg#messages-square"></use></svg></span><h3>Learn together</h3><p>Agree on a time, exchange knowledge, and build momentum one session at a time.</p><a href="/register" class="text-link">Get started <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></article>
+        </div>
+    </section>
+
+    <section class="section section-catalog" id="popular-skills">
+        <div class="page-wrap">
+            <div class="section-heading section-heading-split catalog-heading">
+                <div><p class="eyebrow"><span class="eyebrow-line"></span> A place to start</p><h2>Explore skills.</h2><p class="section-subtitle">Browse the catalog, then find students who want to exchange knowledge.</p></div>
+                <a href="/skills" class="button button-outline">View all skills <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a>
+            </div>
+            <div class="skill-grid" th:if="${!#lists.isEmpty(popularSkills)}">
+                <a class="skill-card" th:each="skill : ${popularSkills}" th:href="@{/skills(q=${skill.name})}">
+                    <span class="skill-card-icon"><svg class="icon"><use href="/icons/lucide.svg#book-open"></use></svg></span>
+                    <span class="skill-card-copy"><strong th:text="${skill.name}">Java</strong><small th:text="${skill.categoryName}">Programming</small></span>
+                    <span class="skill-card-arrow"><svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-up-right"></use></svg></span>
+                    <span class="skill-count" th:text="|${skill.teacherCount} teaching · ${skill.learnerCount} learning|">0 teaching · 0 learning</span>
+                </a>
+            </div>
+            <div class="empty-panel" th:if="${#lists.isEmpty(popularSkills)}"><span class="empty-icon"><svg class="icon"><use href="/icons/lucide.svg#book-open"></use></svg></span><div><h3>The skill catalog is getting ready.</h3><p>Check back soon, or create an account to add the first listing.</p></div><a href="/register" class="text-link">Join SkillSwap <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></div>
+        </div>
+    </section>
+
+    <section class="section page-wrap categories-section">
+        <div class="section-heading section-heading-split"><div><p class="eyebrow"><span class="eyebrow-line"></span> Across interests</p><h2>Learn something new.</h2></div><p>From code to communication, learning can start with a conversation.</p></div>
+        <div class="category-grid">
+            <a class="category-card" th:each="category : ${categories}" th:href="@{/skills(category=${category.slug})}">
+                <span class="category-icon"><svg class="icon"><use th:href="@{'/icons/lucide.svg#' + ${category.icon}}" href="/icons/lucide.svg#shapes"></use></svg></span>
+                <span class="category-copy"><strong th:text="${category.name}">Programming</strong><small th:text="${category.skillCount} + ' skills in the catalog'">0 skills in the catalog</small></span>
+                <svg class="icon icon-small category-arrow"><use href="/icons/lucide.svg#arrow-up-right"></use></svg>
+            </a>
+        </div>
+    </section>
+
+    <section class="section mentor-section">
+        <div class="page-wrap mentor-inner">
+            <div><p class="eyebrow"><span class="eyebrow-line"></span> People make the difference</p><h2>Students teaching students.</h2><p class="section-subtitle">Meet peers who can help you get started — and bring what you know to the table, too.</p></div>
+            <div class="mentor-empty"><span class="mentor-empty-icon"><svg class="icon"><use href="/icons/lucide.svg#users"></use></svg></span><div><strong>Mentor profiles are built by students.</strong><p>No public mentor profiles yet. Join to create yours.</p></div><a href="/register" class="button button-outline">Create your profile</a></div>
+        </div>
+    </section>
+
+    <section class="section page-wrap testimonials-section">
+        <div class="section-heading section-heading-split"><div><p class="eyebrow"><span class="eyebrow-line"></span> Learning, in their words</p><h2>Student testimonials.</h2></div><p>Reviews are published only after a verified, completed exchange.</p></div>
+        <div class="testimonial-grid" th:if="${!#lists.isEmpty(testimonials)}">
+            <article class="testimonial-card" th:each="review : ${testimonials}">
+                <div class="testimonial-stars" th:attr="aria-label=|${review.rating} out of 5 stars|"><svg class="icon" th:each="star : ${#numbers.sequence(1,5)}" th:classappend="${star <= review.rating} ? ' is-filled' : ''"><use href="/icons/lucide.svg#star"></use></svg></div>
+                <blockquote th:text="${review.comment}">A student's verified review will appear here.</blockquote>
+                <div class="testimonial-by"><span class="testimonial-initial" th:text="${#strings.substring(review.reviewerName,0,1)}">S</span><span><strong th:text="${review.reviewerName}">Student</strong><small th:text="|Verified exchange with ${review.revieweeName} · ${review.skillName}|">Verified exchange</small></span></div>
+            </article>
+        </div>
+        <div class="empty-panel testimonials-empty" th:if="${#lists.isEmpty(testimonials)}"><span class="empty-icon"><svg class="icon"><use href="/icons/lucide.svg#message-circle"></use></svg></span><div><h3>No student reviews yet.</h3><p>Reviews appear after students complete a verified exchange. No sample testimonials are shown.</p></div></div>
+    </section>
+
+    <section class="section page-wrap value-section">
+        <div class="value-card">
+            <div class="value-copy"><p class="eyebrow"><span class="eyebrow-line"></span> Fair exchange</p><h2>Time is the currency.<br><span>Knowledge is the reward.</span></h2><p>Skill Credits help keep the exchange balanced when you book learning sessions. Credits stay inside SkillSwap — they are not money, cannot be sold, and cannot be withdrawn.</p><a href="/register" class="text-link">How Skill Credits work <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></div>
+            <div class="credit-visual" aria-label="Skill Credits are an in-app learning reward, not money"><div class="credit-top"><span>SKILLSWAP WALLET</span><svg class="icon"><use href="/icons/lucide.svg#wallet-cards"></use></svg></div><div class="credit-symbol"><svg class="icon"><use href="/icons/lucide.svg#repeat-2"></use></svg></div><strong>Skill Credits</strong><p>Earn by teaching · Spend to learn</p><span class="credit-disclaimer">IN-APP REWARDS ONLY</span></div>
+        </div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+        <div class="page-wrap faq-layout"><div><p class="eyebrow"><span class="eyebrow-line"></span> Good to know</p><h2>Common questions.</h2><p class="section-subtitle">A few things worth knowing before you start.</p></div>
+            <div class="faq-list">
+                <details><summary>Does SkillSwap cost money?<svg class="icon"><use href="/icons/lucide.svg#chevron-down"></use></svg></summary><p>No. Students exchange knowledge and time. Skill Credits are in-app rewards only — not money, not transferable out, and not withdrawable.</p></details>
+                <details><summary>Do I need to be an expert to teach?<svg class="icon"><use href="/icons/lucide.svg#chevron-down"></use></svg></summary><p>No. Be clear about your experience and choose a skill you feel comfortable sharing. Learning goes both ways.</p></details>
+                <details><summary>How are matches chosen?<svg class="icon"><use href="/icons/lucide.svg#chevron-down"></use></svg></summary><p>Recommendations use real skill overlap, reciprocal interests, availability, proficiency, and learning preferences from student profiles.</p></details>
+                <details><summary>Can I choose who sees my profile?<svg class="icon"><use href="/icons/lucide.svg#chevron-down"></use></svg></summary><p>Yes. Profile visibility and what information you share are controlled in your account settings.</p></details>
+            </div>
+        </div>
+    </section>
+    <section class="closing-cta"><div class="page-wrap closing-inner"><div><p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> Start with what you know</p><h2>Have a skill to share?</h2><p>Find someone who wants to learn it — and teach you something in return.</p></div><a class="button button-white" href="/register">Join SkillSwap <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></div></section>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

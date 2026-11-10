@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#172d52">
+    <meta name="description" content="Learn together. Grow together. Exchange skills with students in your community.">
+    <title th:text="${title} + ' · SkillSwap'">SkillSwap</title>
+    <link rel="icon" type="image/svg+xml" href="/images/mark.svg">
+    <link rel="preload" href="/images/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="/css/account.css">
+    <link rel="stylesheet" href="/css/info.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <script src="/js/password-toggle.js" defer></script>
+</head>
+<body>
+<header class="site-header" th:fragment="header(active)">
+    <div class="header-inner">
+        <a class="brand" href="/" aria-label="SkillSwap home">
+            <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="/icons/lucide.svg#repeat-2"></use></svg></span>
+            <span>skill<span class="brand-strong">swap</span></span>
+        </a>
+        <nav class="primary-nav" aria-label="Main navigation">
+            <a href="/skills" th:classappend="${active == 'skills'} ? ' is-active' : ''">Explore skills</a>
+            <a href="/#how-it-works">How it works</a>
+        </nav>
+        <div class="header-actions">
+            <a class="button button-quiet header-login" href="/login" sec:authorize="isAnonymous()">Log in</a>
+            <a class="button button-primary header-join" href="/register" sec:authorize="isAnonymous()">Join SkillSwap <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a>
+            <a class="button button-quiet" href="/dashboard" sec:authorize="isAuthenticated()">Dashboard</a>
+            <form method="post" th:action="@{/logout}" sec:authorize="isAuthenticated()"><button class="button button-outline" type="submit">Log out</button></form>
+        </div>
+    </div>
+</header>
+<footer class="site-footer" th:fragment="footer">
+    <div class="footer-main">
+        <div class="footer-brand-col">
+            <a class="brand brand-light" href="/"><span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="/icons/lucide.svg#repeat-2"></use></svg></span><span>skill<span class="brand-strong">swap</span></span></a>
+            <p>Good at something? Pass it on.<br>Curious about something? Start here.</p>
+        </div>
+        <div class="footer-links"><h2>Explore</h2><a href="/skills">Skill catalog</a><a href="/#how-it-works">How it works</a><a href="/#faq">Common questions</a></div>
+        <div class="footer-links"><h2>SkillSwap</h2><a href="/about">About</a><a href="/contact">Contact</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms of use</a></div>
+        <div class="footer-note"><span class="footer-note-icon"><svg class="icon"><use href="/icons/lucide.svg#hand-heart"></use></svg></span><p>Skill Credits stay in the app.<br>They are not money and cannot be withdrawn.</p></div>
+    </div>
+    <div class="footer-bottom"><span>© <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span> SkillSwap</span><span>Made for students, by students.</span></div>
+</footer>
+</body>
+</html>

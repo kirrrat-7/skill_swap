@@ -1,0 +1,23 @@
+skillswap:
+  mail:
+    dev-outbox: true
+spring:
+  datasource:
+    url: ${SKILLSWAP_TEST_DB_URL:jdbc:mysql://localhost:3306/skillswap_test?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC}
+    username: ${SKILLSWAP_TEST_DB_USERNAME:skillswap}
+    password: ${SKILLSWAP_TEST_DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+logging:
+  level:
+    root: WARN
+    com.skillswap: INFO

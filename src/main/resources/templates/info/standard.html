@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header('')}"></div>
+<main class="info-page page-wrap">
+    <div class="page-breadcrumb"><a href="/">Home</a><svg class="icon"><use href="/icons/lucide.svg#chevron-right"></use></svg><span th:text="${title}">About</span></div>
+    <header class="info-header"><p class="eyebrow"><span class="eyebrow-line"></span><span th:text="${eyebrow}">About</span></p><h1 th:text="${heading}">Page heading</h1><p th:text="${intro}">Page introduction.</p></header>
+    <div class="legal-review-note" th:if="${title == 'Privacy policy' or title == 'Terms of use'}"><svg class="icon"><use href="/icons/lucide.svg#info"></use></svg><span>This is an early-service policy draft; the operator should review it before a public launch.</span></div>
+    <div class="info-content" th:if="${title != 'Contact'}">
+        <section class="info-block" th:each="section : ${sections}"><h2 th:text="${section.heading}">Section</h2><p th:text="${section.body}">Information</p></section>
+    </div>
+    <section class="contact-card" th:if="${title == 'Contact'}">
+        <span class="contact-card-icon"><svg class="icon"><use href="/icons/lucide.svg#mail"></use></svg></span>
+        <div th:if="${!#strings.isEmpty(supportEmail)}"><h2>Email support</h2><p>For platform questions, send a message to the configured support address.</p><a class="button button-primary" th:href="|mailto:${supportEmail}|" th:text="${supportEmail}">support@example.edu</a></div>
+        <div th:if="${#strings.isEmpty(supportEmail)}"><h2>Support is not configured yet.</h2><p>The operator needs to set <code>SKILLSWAP_SUPPORT_EMAIL</code> before this deployment can accept support requests.</p></div>
+    </section>
+    <nav class="info-back" aria-label="Page navigation"><a class="text-link" href="/"><svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-left"></use></svg> Back to SkillSwap</a><a class="text-link" href="/skills">Explore skills <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></a></nav>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
