@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (Java 21, MySQL 8.4)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Start MySQL 8.4 with a one-off password
+        run: |
+          PW="$(openssl rand -hex 18)"
+          echo "::add-mask::$PW"
+          {
+            echo "SKILLSWAP_TEST_DB_URL=jdbc:mysql://127.0.0.1:3306/skillswap_test"
+            echo "SKILLSWAP_TEST_DB_USERNAME=skillswap"
+            echo "SKILLSWAP_TEST_DB_PASSWORD=$PW"
+          } >> "$GITHUB_ENV"
+          docker run -d --name skillswap-mysql -p 127.0.0.1:3306:3306 \
+            -e MYSQL_ROOT_PASSWORD="$PW" -e MYSQL_DATABASE=skillswap_test \
+            -e MYSQL_USER=skillswap -e MYSQL_PASSWORD="$PW" \
+            mysql:8.4 --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
+          for i in $(seq 1 60); do
+            if docker exec skillswap-mysql mysqladmin ping -uskillswap -p"$PW" --silent 2>/dev/null; then echo "MySQL is ready"; exit 0; fi
+            sleep 2
+          done
+          docker logs skillswap-mysql; exit 1
+
+      - name: Build, unit tests and integration tests
+        run: mvn -B -ntp verify
+
+      - name: Report failed tests
+        if: failure()
+        run: |
+          shopt -s nullglob
+          for f in target/surefire-reports/*.txt target/failsafe-reports/*.txt; do
+            if grep -qE 'FAILURE|ERROR' "$f"; then
+              echo "::error title=$(basename "$f" .txt)::$(grep -E 'Tests run|FAILURE|ERROR' "$f" | head -5 | tr '\n' ' ')"
+            fi
+          done
