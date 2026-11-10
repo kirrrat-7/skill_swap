@@ -1,6 +1,7 @@
 package com.skillswap.config;
 
 import com.skillswap.repository.UserRepository;
+import com.skillswap.security.AuthVersionValidationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,14 +33,15 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain applicationSecurity(HttpSecurity http, UserDetailsService userDetailsService,
-                                            PasswordEncoder passwordEncoder) throws Exception {
+                                            PasswordEncoder passwordEncoder, UserRepository users) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
         http
             .authenticationProvider(provider)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/skills", "/about", "/contact", "/privacy", "/terms",
-                    "/register", "/login", "/verify-email", "/verify-email/sent", "/dev/outbox",
+                    "/register", "/login", "/verify-email", "/verify-email/sent",
+                    "/forgot-password", "/forgot-password/sent", "/reset-password", "/dev/outbox",
                     "/css/**", "/js/**", "/images/**", "/icons/**", "/actuator/health", "/actuator/health/**").permitAll()
                 .anyRequest().authenticated())
             .formLogin(form -> form
@@ -55,7 +57,9 @@ public class SecurityConfig {
                 .contentSecurityPolicy(csp -> csp.policyDirectives(
                     "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; " +
                     "connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"))
-                .referrerPolicy(referrer -> referrer.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)));
+                .referrerPolicy(referrer -> referrer.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)))
+            .addFilterAfter(new AuthVersionValidationFilter(users),
+                org.springframework.security.web.context.SecurityContextHolderFilter.class);
         return http.build();
     }
 }

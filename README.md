@@ -2,7 +2,7 @@
 
 SkillSwap is a server-rendered peer-to-peer learning platform for students. It helps students exchange knowledge without money and recommends partners whose teaching and learning goals overlap.
 
-> **Build status:** Phases 1–2 are in progress. The Java 21 / Spring Boot foundation, MySQL/Flyway schema and catalog, database-backed public homepage/search, registration, BCrypt login, hashed email verification, a database-backed overview dashboard, and MySQL integration tests are implemented. Password recovery, rate limiting, social sign-in, MFA, profile/skill editing, matching, exchanges, wallet accounting, notifications, administration, and production hardening remain. This is not production-ready; do not use it for real accounts or sensitive data.
+> **Build status:** Phases 1–2 are in progress. The Java 21 / Spring Boot foundation, MySQL/Flyway schema and catalog, database-backed public homepage/search, registration, BCrypt login, hashed email verification, a database-backed overview dashboard, and MySQL integration tests are implemented. Social sign-in, MFA, profile/skill editing, matching, exchanges, wallet accounting, notifications, administration, and production hardening remain; password reset has an early implementation, while verification-email recovery and login throttling do not. This is not production-ready; do not use it for real accounts or sensitive data.
 
 ## Stack
 
@@ -17,12 +17,13 @@ The app is a Java application. Maven runs the frontend build-free: templates, st
 
 - Responsive public homepage and searchable MySQL catalog, with database-derived community metrics and honest empty states. Testimonials come only from verified completed-session reviews; there are no fabricated people, reviews, or activity.
 - Account registration (name, email, password, college, department, semester, terms), BCrypt password hashing, duplicate-email protection, email verification tokens stored as SHA-256 hashes, and one-time email verification.
+- Generic forgot-password responses, one-time hashed reset links with an atomic per-IP hourly limit, BCrypt password replacement, and session revocation through a DB-checked auth version.
 - Email/password login is restricted to active, email-verified accounts; CSRF protection stays enabled and sign-out is a CSRF-protected POST.
 - A database-backed student overview after login, showing the current account's actual skill, session, credit, hours, badge, and notification totals. Unimplemented dashboard modules are marked as being built rather than linked to dead routes.
 - Dev-profile email outbox at `/dev/outbox` (in-memory only) when SMTP is not configured. It is not registered in production.
-- Two append-only Flyway migrations and the schema constraints/indexes. The skill catalog seed contains reference taxonomy only, not users or reviews.
+- Three append-only Flyway migrations and the schema constraints/indexes. The skill catalog seed contains reference taxonomy only, not users or reviews.
 - Pages for About, Contact, Privacy, Terms, registration, login, verification, and the local mail preview. The privacy/terms pages are explicitly early drafts needing operator/legal review.
-- MySQL 8-backed integration tests cover database migrations and page rendering, skill search/filter, protected dashboard access, registration validation/duplicates, hashed credentials/tokens, email verification, and login.
+- MySQL 8-backed integration tests cover database migrations and page rendering, skill search/filter, protected dashboard access, registration validation/duplicates, hashed credentials/tokens, email verification, login/logout, password-reset rate limits, one-time resets, and session revocation.
 - HTTP health endpoint at `/actuator/health`.
 
 ## Local development
@@ -64,14 +65,14 @@ Requirements: JDK 21, Maven 3.9+, and MySQL 8.4+.
 
 See `.env.example` for the environment variable names. The production profile is activated with `SPRING_PROFILES_ACTIVE=prod`. Do not put credentials, encryption keys, signing keys, OAuth secrets, or database passwords in YAML, templates, source control, or browser code. Configure secrets in your host's secret manager.
 
-OAuth, outgoing email, production secret checks, backup/restore, deployment verification, and a public HTTPS deployment are not yet implemented. No public URL is available or claimed.
+OAuth and account linking, backup/restore, deployment verification, and a public HTTPS deployment are not yet implemented. Production mail delivery is wired but requires the operator's SMTP credentials. The production profile has startup guards for HTTPS, MySQL, encryption key, and SMTP configuration. No public URL is available or claimed.
 
 ## Data and security notes
 
 - MySQL is the source of truth. The catalog seed contains only reference categories and skill names; user content is read from MySQL.
 - All timestamps are stored in UTC; availability is interpreted using the student's saved time zone.
 - Skill Credits are an in-app reward only. They are not money, not a cryptocurrency, and cannot be sold or withdrawn.
-- The schema stores password hashes only, stores hashed email/reset tokens and recovery codes, and reserves encrypted columns for TOTP secrets. The service implementations are pending.
+- The app stores BCrypt password hashes, SHA-256 hashes of verification/reset tokens, and has reset-token replay protection; TOTP secrets/recovery codes have schema fields but their service implementation is pending.
 - Schema changes are append-only Flyway migrations. Do not edit a migration after it has been applied outside a disposable local database; add a new version instead.
 
 ## Documentation
@@ -82,7 +83,7 @@ OAuth, outgoing email, production secret checks, backup/restore, deployment veri
 
 ## Current limitations
 
-This is an actively built development version, not a finished learning platform. Do not create real accounts or use sensitive data. Password recovery, resend/expiry recovery for verification emails, social sign-in and account linking, TOTP/recovery codes, profile photo/privacy editing, skill CRUD, recommendation scoring, requests and sessions, atomic wallet rules, review/report workflows, notifications/reminders, admin operations, rate limiting, end-to-end browser accessibility/security checks, and production deployment remain to be implemented and verified. Email delivery requires real SMTP outside the dev/test outbox. The required OAuth provider apps/credentials and a public HTTPS host have not been supplied. Continue in the phased plan in `docs/ARCHITECTURE.md`.
+This is an actively built development version, not a finished learning platform. Do not create real accounts or use sensitive data. Resend/expiry recovery for verification emails, login brute-force throttling, social sign-in and account linking, TOTP/recovery codes, profile photo/privacy editing, skill CRUD, recommendation scoring, requests and sessions, atomic wallet rules, review/report workflows, notifications/reminders, admin operations, end-to-end browser accessibility/security checks, and production deployment remain to be implemented and verified. Password reset has an early tested implementation with a per-IP limit. Email delivery requires real SMTP outside the dev/test outbox. The required OAuth provider apps/credentials and a public HTTPS host have not been supplied. Continue in the phased plan in `docs/ARCHITECTURE.md`.
 
 ## Credits and licenses
 

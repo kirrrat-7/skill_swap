@@ -5,14 +5,10 @@ import com.skillswap.entity.EmailVerificationTokenEntity;
 import com.skillswap.entity.UserEntity;
 import com.skillswap.repository.EmailVerificationTokenRepository;
 import com.skillswap.repository.UserRepository;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.HexFormat;
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -62,7 +58,7 @@ public class RegistrationService {
         byte[] randomToken = new byte[32];
         RANDOM.nextBytes(randomToken);
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(randomToken);
-        tokens.save(new EmailVerificationTokenEntity(user, email, sha256(token),
+        tokens.save(new EmailVerificationTokenEntity(user, email, TokenDigests.sha256(token),
             now.plus(verificationLifetime), now));
 
         String link = baseUrl + "/verify-email?token=" + token;
@@ -78,7 +74,7 @@ public class RegistrationService {
         if (!StringUtils.hasText(rawToken) || rawToken.length() > 128) {
             return EmailVerificationResult.INVALID_OR_EXPIRED;
         }
-        var found = tokens.findByHashWithUser(sha256(rawToken.strip()));
+        var found = tokens.findByHashWithUser(TokenDigests.sha256(rawToken.strip()));
         if (found.isEmpty()) return EmailVerificationResult.INVALID_OR_EXPIRED;
         var token = found.get();
         var user = token.getUser();
@@ -93,12 +89,4 @@ public class RegistrationService {
         return EmailVerificationResult.VERIFIED;
     }
 
-    private static String sha256(String input) {
-        try {
-            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
-                .digest(input.getBytes(StandardCharsets.UTF_8)));
-        } catch (NoSuchAlgorithmException impossible) {
-            throw new IllegalStateException("SHA-256 is required by the Java runtime", impossible);
-        }
-    }
 }

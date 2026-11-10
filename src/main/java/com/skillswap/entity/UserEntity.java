@@ -70,6 +70,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "auth_version", nullable = false)
+    private int authVersion;
+
     @Version
     private long version;
 
@@ -106,7 +109,13 @@ public class UserEntity implements UserDetails {
     public boolean isEmailVerified() { return emailVerifiedAt != null; }
     public Role getRole() { return role; }
     public Status getStatus() { return status; }
+    public int getAuthVersion() { return authVersion; }
+    public boolean hasLocalPassword() { return passwordHash != null && !passwordHash.isBlank(); }
     public void setEmailVerifiedAt(Instant emailVerifiedAt) { this.emailVerifiedAt = emailVerifiedAt; }
+    public void resetPassword(String encodedPassword) {
+        this.passwordHash = encodedPassword;
+        this.authVersion++;
+    }
 
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

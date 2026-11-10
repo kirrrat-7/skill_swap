@@ -20,6 +20,8 @@
             <div class="form-alert form-alert-success" role="status" th:if="${param.loggedOut}"><p>You have been logged out.</p></div>
             <label class="form-field"><span>Email address</span><input type="email" name="email" autocomplete="username" maxlength="254" placeholder="you@university.edu" required autofocus></label>
             <label class="form-field"><span>Password</span><span class="password-control"><input id="login-password" type="password" name="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-toggle hidden aria-label="Show password" aria-pressed="false" aria-controls="login-password"><svg class="icon"><use href="/icons/lucide.svg#eye"></use></svg></button></span></label>
+            <p class="forgot-link"><a href="/forgot-password">Forgot your password?</a></p>
+            <div class="form-alert form-alert-success" role="status" th:if="${param.reset}"><p>Your password was updated. Log in with your new password.</p></div>
             <button class="button button-primary auth-submit" type="submit">Log in <svg class="icon icon-small"><use href="/icons/lucide.svg#arrow-right"></use></svg></button>
             <p class="auth-switch">New to SkillSwap? <a href="/register">Create an account</a></p>
             <p class="auth-security-note"><svg class="icon icon-small"><use href="/icons/lucide.svg#lock"></use></svg> Your session is protected with a secure, HttpOnly cookie.</p>

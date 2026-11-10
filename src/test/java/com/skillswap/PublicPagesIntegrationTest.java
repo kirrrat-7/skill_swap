@@ -70,9 +70,12 @@ class PublicPagesIntegrationTest {
         mvc.perform(get("/login"))
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("name=\"_csrf\"")));
-        for (String path : java.util.List.of("/about", "/contact", "/privacy", "/terms")) {
+        for (String path : java.util.List.of("/about", "/contact", "/privacy", "/terms", "/forgot-password")) {
             mvc.perform(get(path)).andExpect(status().isOk());
         }
+        mvc.perform(get("/reset-password"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("This reset link is unavailable.")));
     }
 
     @Test

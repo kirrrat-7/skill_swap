@@ -40,7 +40,7 @@ Implemented currently: `PublicController` + `PublicCatalogService` for homepage/
 | Public | `/about`, `/contact`, `/privacy`, `/terms` | public | live (draft policy copy; support address must be configured) |
 | Account | `/register`, `/login`, `/logout` | public / authenticated | live (email/password; sign-out is POST) |
 | Account | `/verify-email`, `/verify-email/sent` | signed link / public | live (resend and expiry recovery planned) |
-| Account | `/forgot-password`, `/reset-password` | public, signed token | planned |
+| Account | `/forgot-password`, `/forgot-password/sent`, `/reset-password` | public, signed token | live (generic responses, hashed one-time token, 30-minute expiry, atomic per-IP hourly cap, session-version revocation) |
 | Account | `/oauth2/authorization/{provider}`, provider callback | public | planned; official configuration required |
 | Account | `/mfa/challenge`, `/settings/security/mfa` | staged session / authenticated | planned |
 | Student | `/dashboard` — overview metrics, activity and progress | authenticated | live (empty state; module navigation is visibly marked as building) |
@@ -62,7 +62,7 @@ The dashboard sidebar should contain Overview, My Profile, My Skills, Find Match
 
 Migration `V1__core_schema.sql` establishes the required relational core plus supporting tables. The twenty named requirements are represented as `users`, `oauth_accounts`, `email_verification_tokens`, `password_reset_tokens`, `user_mfa_settings`, `mfa_recovery_codes`, `skills`, `user_skills`, `student_availability`, `skill_requests`, `sessions`, `reviews`, `notifications`, `wallets`, `wallet_transactions`, `achievements`, `user_achievements`, `learning_goals`, `learning_progress`, and `admin_audit_logs`.
 
-Supporting tables currently include `user_photos`, `remember_me_tokens`, `security_events`, `skill_categories`, `user_interests`, `content_reports`, `goal_milestones`, and `announcements`. They cover profile uploads, remember-me revocation, security-event history, category management, reporting, measurable learning goals, and admin announcements. Foreign keys, unique indexes, query indexes, check constraints, optimistic version fields, and UTC timestamp columns are specified in SQL.
+Supporting tables currently include `user_photos`, `remember_me_tokens`, `security_events`, `skill_categories`, `user_interests`, `content_reports`, `goal_milestones`, `announcements`, and `rate_limit_buckets`. They cover profile uploads, remember-me revocation, security-event history, category management, reporting, measurable learning goals, admin announcements, and atomic privacy-preserving abuse counters. Migrations `V1`–`V3` define the core, reference catalog, and limiter buckets. Foreign keys, unique indexes, query indexes, check constraints, optimistic version fields, and UTC timestamp columns are specified in SQL.
 
 `V2__skill_catalog.sql` inserts only the 10 taxonomy categories and catalog skill names. It does not insert users, public mentors, testimonials, or reviews. The core schema includes:
 
@@ -84,13 +84,13 @@ The planned matching service uses normalized 0–100 components and configurable
 
 ## Security boundaries
 
-Planned implementation: BCrypt password hashes, generic account-recovery/login errors, input validation, rate limits, CSRF, HttpOnly/Secure/SameSite session cookies, session fixation protection, account-linking confirmation, TOTP AES-GCM encryption, one-time recovery codes, and server-side authorization at each controller/service boundary. Social providers use Spring Security OAuth/OIDC and store only the stable subject plus provider metadata; they never supply a local password. Matching/profile privacy is enforced in the query and service, not by hiding a template button.
+Implemented now: BCrypt password hashes, generic reset-request responses, a hashed one-use reset token with a 30-minute expiry, an atomic per-IP hourly reset-request counter, CSRF, HttpOnly/Secure/SameSite session cookies, session-fixation protection, CSP/referrer headers, and auth-version validation that invalidates existing sessions after a password reset. Pending: login brute-force throttling, account-linking confirmation, TOTP AES-GCM flows/recovery codes, and server-side authorization for the modules not built yet. Social providers will use Spring Security OAuth/OIDC and store only the stable subject plus provider metadata; they must never supply a local password. Matching/profile privacy is enforced in the query and service, not by hiding a template button.
 
 The current `SecurityConfig` provides BCrypt-backed email/password authentication from `users`, requires active and email-verified accounts, enables CSRF, uses Spring Security's session-fixation protection, and protects all routes except the explicit public allowlist. This is not the final account system: recovery, brute-force/rate limits, OAuth, TOTP, session-version revocation, and admin role workflows are still missing. Do not deploy this version as a user service.
 
 ## Transactional invariants to test before completion
 
-1. Registration, duplicate-email races, verification-token reuse/expiry, reset-token reuse/expiry, and credential/session revocation.
+1. Registration/duplicate-email races, verification-token reuse/expiry, password-reset request enumeration and per-IP races, reset-token reuse/expiry, credential hashing, and auth-version session revocation.
 2. OAuth provider/subject uniqueness; no merge on matching email without the account holder authenticating and confirming.
 3. TOTP RFC vectors, ±1 time window, one-step replay rejection, attempt limits/lockout, recovery code single use, reauthentication to disable/regenerate.
 4. Skill/request ownership; no self-request, duplicate active request, or unauthorized state change.
