@@ -2,7 +2,7 @@
 
 SkillSwap is a server-rendered peer-to-peer learning platform for students. It helps students exchange knowledge without money and recommends partners whose teaching and learning goals overlap.
 
-> **Build status:** Phases 1–2 are in progress. The Java 21 / Spring Boot foundation, MySQL/Flyway schema and catalog, database-backed public homepage/search, registration, BCrypt login, hashed email verification, a database-backed overview dashboard, and MySQL integration tests are implemented. Social sign-in, MFA, profile/skill editing, matching, exchanges, wallet accounting, notifications, administration, and production hardening remain; password reset has an early implementation, while verification-email recovery and login throttling do not. This is not production-ready; do not use it for real accounts or sensitive data.
+> **Build status:** Phases 1–2 are in progress. The Java 21 / Spring Boot foundation, MySQL/Flyway schema and catalog, database-backed public homepage/search, registration, BCrypt login, hashed email verification, password recovery with single-use reset tokens and per-IP throttling, auth-version session revocation, a database-backed overview dashboard, and MySQL integration tests are implemented. Social sign-in, MFA, profile/skill editing, matching, exchanges, wallet accounting, notifications, administration, verification-email recovery, login throttling, and production hardening remain. This is not production-ready; do not use it for real accounts or sensitive data.
 
 ## Stack
 
@@ -83,7 +83,7 @@ OAuth and account linking, backup/restore, deployment verification, and a public
 
 ## Current limitations
 
-This is an actively built development version, not a finished learning platform. Do not create real accounts or use sensitive data. Resend/expiry recovery for verification emails, login brute-force throttling, social sign-in and account linking, TOTP/recovery codes, profile photo/privacy editing, skill CRUD, recommendation scoring, requests and sessions, atomic wallet rules, review/report workflows, notifications/reminders, admin operations, end-to-end browser accessibility/security checks, and production deployment remain to be implemented and verified. Password reset has an early tested implementation with a per-IP limit. Email delivery requires real SMTP outside the dev/test outbox. The required OAuth provider apps/credentials and a public HTTPS host have not been supplied. Continue in the phased plan in `docs/ARCHITECTURE.md`.
+This is an actively built development version, not a finished learning platform. Do not create real accounts or use sensitive data. Resend/expiry recovery for verification emails, login brute-force throttling, social sign-in and account linking, TOTP/recovery codes, profile photo/privacy editing, skill CRUD, recommendation scoring, requests and sessions, atomic wallet rules, review/report workflows, notifications/reminders, admin operations, end-to-end browser accessibility/security checks, and production deployment remain to be implemented and verified. Password recovery is implemented and integration-tested, including a per-IP limit and session revocation. Email delivery requires real SMTP outside the dev/test outbox. The required OAuth provider apps/credentials and a public HTTPS host have not been supplied. Continue in the phased plan in `docs/ARCHITECTURE.md`.
 
 ## Credits and licenses
 

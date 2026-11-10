@@ -150,7 +150,7 @@ class AccountRegistrationIntegrationTest {
                 .param("confirmPassword", "DifferentPassword2026")
                 .param("termsAccepted", "true"))
             .andExpect(status().isOk())
-            .andExpect(content().string(containsString("An account with this email address already exists")));
+            .andExpect(content().string(containsString("If you already registered, log in or reset your password.")));
         org.junit.jupiter.api.Assertions.assertEquals(1, jdbc.queryForObject(
             "SELECT COUNT(*) FROM users WHERE email = ?", Integer.class, "duplicate.registration@example.edu"));
     }
