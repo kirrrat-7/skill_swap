@@ -26,4 +26,7 @@ Thumbs.db
 
 # Local uploads / scratch
 /uploads/
+
+# Generated source archive (regenerate from HEAD when needed)
+/skillswap-source.zip
 /tmp/
