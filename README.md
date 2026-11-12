@@ -9,9 +9,10 @@ SkillSwap is a server-rendered peer-to-peer learning platform for students. It h
 - Java 21, Spring Boot 3.5.13, Spring MVC, Spring Security
 - Maven, Spring Data JPA/Hibernate, JDBC, Flyway
 - MySQL 8.4+ (MySQL 8.4 is used in CI), Thymeleaf, HTML, CSS
-- Lucide icons and a locally hosted Inter font; no frontend framework or application JavaScript
+- Next.js 16 / React 19 frontend for Vercel, alongside the existing Thymeleaf frontend
+- Lucide icons and a locally hosted Inter font
 
-The app is a Java application. Maven runs the frontend build-free: templates, styles, icon sprites, and fonts are packaged as static/classpath resources.
+The Spring Boot application remains a Java application with its existing Thymeleaf pages. The separate `frontend/` Next.js application builds independently for Vercel. The Next.js homepage reads the public catalog from Spring; account, catalog search, and informational links open the original Spring application on its own host.
 
 ## What works in the current build
 
@@ -26,7 +27,37 @@ The app is a Java application. Maven runs the frontend build-free: templates, st
 - MySQL 8-backed integration tests cover database migrations and page rendering, skill search/filter, protected dashboard access, registration validation/duplicates, hashed credentials/tokens, email verification, login/logout, password-reset rate limits, one-time resets, and session revocation.
 - HTTP health endpoint at `/actuator/health`.
 
-## Local development
+## Deploying the frontend on Vercel
+
+Vercel hosts **only the Next.js frontend**. Deploy Spring Boot separately on a Java 21-capable host with MySQL 8.4+, SMTP, HTTPS, and its own environment/secrets. The repository root `Dockerfile` can be used on a Docker-capable Java host. See `.env.example` and the production safety checks for backend configuration. Set `SKILLSWAP_BASE_URL` to the **public Spring Boot origin**, not the Vercel URL: verification and password-reset emails must open the existing Spring routes. Ensure the host forwards HTTPS headers correctly, allows traffic to the app port (`PORT`), and keeps the database reachable. Confirm `/actuator/health` and `/api/public/home` on the backend before deploying the frontend.
+
+In Vercel, import this repository and use:
+
+- **Root Directory:** `frontend`
+- **Framework Preset:** Next.js
+- **Install Command:** `npm ci` (or Vercel's default)
+- **Build Command:** `npm run build` (or Vercel's default)
+- **Output Directory:** leave unset (Next.js default; do not use `out`)
+- **Node.js:** 22.x
+- **Environment variable:** `NEXT_PUBLIC_API_URL=https://your-backend.example.com` (the public HTTPS origin only, without a path or trailing slash). Configure it for each Vercel environment and redeploy after changes; `NEXT_PUBLIC_` values are public and are embedded at build time. **Never put credentials or secrets in this variable.**
+
+The server-rendered Next.js homepage calls `/api/public/home` from Vercel, so no browser CORS configuration is needed. Login, registration, dashboard, password recovery, catalog search and policy pages remain on the backend origin; the browser navigates there directly, so the Spring session cookie and CSRF protections stay on that host. This is not a full migration of those pages into Next.js. The backend must be publicly reachable by both Vercel and visitors. If it is absent or unreachable, the homepage still renders with an unavailable catalog message; with no URL configured, backend links are disabled.
+
+### Run the frontend locally
+
+Requires Node.js 22 and npm. Start the Java app and MySQL as described below, then:
+
+```sh
+cd frontend
+cp .env.example .env.local
+# Set NEXT_PUBLIC_API_URL to the browser-accessible Spring origin in .env.local.
+npm ci
+npm run dev
+```
+
+Open `http://localhost:3000`. To check the production build instead, run `npm run build` then `npm start`. When using a remote preview, `localhost` points to the viewer's machine, not the server: use a browser-accessible backend URL instead. You can run the frontend without the variable to preview its layout and unavailable state, but account/catalog functions require the running backend. Do not use real accounts or sensitive data; the application remains under development.
+
+## Spring Boot local development
 
 Requirements: JDK 21, Maven 3.9+, and MySQL 8.4+.
 
