@@ -30,3 +30,8 @@ Thumbs.db
 # Generated source archive (regenerate from HEAD when needed)
 /skillswap-source.zip
 /tmp/
+
+# Next.js frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/

@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +38,17 @@ class PublicPagesIntegrationTest {
             .andExpect(header().string("Content-Security-Policy", containsString("frame-ancestors 'none'")));
         org.junit.jupiter.api.Assertions.assertEquals(10,
             jdbc.queryForObject("SELECT COUNT(*) FROM skill_categories WHERE active = 1", Integer.class));
+    }
+
+    @Test
+    @WithAnonymousUser
+    void publicHomeApiReturnsDatabaseBackedCatalog() throws Exception {
+        mvc.perform(get("/api/public/home"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith("application/json"))
+            .andExpect(jsonPath("$.metrics.studentCount").isNumber())
+            .andExpect(jsonPath("$.popularSkills[0].name").isNotEmpty())
+            .andExpect(jsonPath("$.categories[0].slug").isNotEmpty());
     }
 
     @Test

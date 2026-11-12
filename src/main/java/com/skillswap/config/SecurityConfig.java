@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/skills", "/about", "/contact", "/privacy", "/terms",
                     "/register", "/login", "/verify-email", "/verify-email/sent",
                     "/forgot-password", "/forgot-password/sent", "/reset-password", "/dev/outbox",
-                    "/css/**", "/js/**", "/images/**", "/icons/**", "/actuator/health", "/actuator/health/**").permitAll()
+                    "/api/public/home", "/css/**", "/js/**", "/images/**", "/icons/**", "/actuator/health", "/actuator/health/**").permitAll()
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .loginPage("/login")
